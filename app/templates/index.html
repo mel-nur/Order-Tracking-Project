@@ -1,0 +1,187 @@
+<!DOCTYYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cotak Manav</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+        <style>
+            body{
+                font-family:"Roboto", Arial, sans-serif;
+                background: linear-gradient(120deg, #625dc1 0%, #42a7bc 100%);
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                max-width: 900px;
+                margin: 40px auto;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+                padding: 32px 40px;
+            }
+            h1 {
+                text-align: center;
+                color: #1cb82eaa;
+                font-size: 16px;
+                margin-bottom: 24px;
+            }
+            form {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-bottom: 32px;
+                align-items: center;
+            }
+            input, select, textarea {
+                font-size: 14px;
+                padding: 8px 12px;
+                border-radius: 6px;
+                border: 1px solid #0e1888;
+                outline: none;
+            }
+            textarea {
+                width: 100%;
+                min-height: 80px;
+                resize: vertical;
+            }
+            button {
+                background: #6f0d5d;
+                color: #FFFFFF;
+                border: none;
+                border-radius: 6px;
+                padding: 10px 24px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            button:hover {
+                background: #a44b02aa;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 32px;
+                background: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+             th, td {
+                border: 1px solid #e0e0e0;
+                padding: 10px 14px;
+                text-align: left;
+             }
+             th{
+                background: #401ac9;
+                color: #FFFFFF;
+                font-weight: 700;
+             }
+             h2{
+                color: #1ac94c;
+                margin-top: 40px;
+             }
+             h3{
+                color:#C93F1A;
+                margin-top: 24px;
+             }
+             .totals {
+                margin-top: 40px;
+             }
+
+             @media (max-width: 600px) {
+                .container {
+                    padding: 16px 8px;
+                }
+                form {
+                    flex-direction: column;
+                    gap: 8px;
+                }
+             }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <form action="/reset" method="post" style="margin-bottom:20px">
+                <button type="submit" style="background-color: #170301; color: white; padding:8px 16px; border:none;">Tüm Siparişleri Sıfırla</button>
+            </form>
+            <h1>Çotak Manav</h1>
+            <form action="/add" method="post">
+                <input type="text" name="company" placeholder="Şirket Adı" required>
+                <input list="products" name="product" placeholder="Ürün Adı" required>
+                <datalist id="products">
+                    <option value="Domates">
+                    <option value="Salatalık">
+                    <option value="Patlıcan">
+                    <option value="Patates">
+                    <option value="Soğan">
+                    <option value="Sivri Biber">
+                    <option value="Çarli Biber">
+                    <option value="Kapya Biber">
+                    <option value="Fini Biber">
+                   <option value="Dolma Biber">
+                    <option value="Fasulye">
+                    <option value="Limon">
+                    <option value="Karpuz">
+                    <option value="Kavun">
+                    <option value="Elma">
+                    <option value="Armut">
+                    <option value="Muz">
+                    <option value="Çilek">
+                    <option value="Kivi">
+                    <option value="Erik">
+                </datalist>
+                <input type="number" name="quantity" placeholder="Miktar" required>
+                <input type="text" name="unit" placeholder="Birim (kg, adet, vb.)">
+                <button type="submit">Sipariş Ekle</button>
+            </form>
+            <h2>Toplu Siparişler</h2>
+            <form action="/bulk/add" method="post">
+                <input type="text" name="company" placeholder="Şirket Adı" required>
+                <textarea name="bulk_list" rows="5" cols="50" placeholder="Her satırda bir ürün: Ürünadı miktar birim"></textarea><br>
+                <button type="submit">Toplu Sipariş Ekle</button>
+            </form>
+
+            <h2>Şirket Siparişleri</h2>
+            {% for company, orders_list in company_orders.items() %}
+                <h3>{{ company }}</h3>
+                <table>
+                        <tr>
+                            <th>Ürün</th>
+                            <th>Miktar</th>
+                            <th>Birim</th>
+                            <th>İşlem</th>
+                        </tr>
+                        {% for order in orders_list %}
+                        <tr>
+                            <td>{{ order["product"] }}</td>
+                            <td>{{ order["quantity"] }}</td>
+                            <td>{{ order["unit"] }}</td>
+                            <td>
+                                <form action="/delete/{{ order['id'] }}" method="post" style="display:inline;">
+                                    <button type="submit" style="background:#e74c3c;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% endfor %}
+
+        <div class="totals">
+            <h2>Toplam İhtiyaç Listesi</h2>
+            <table>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Toplam Miktar</th>
+                    <th>Birim</th>
+                </tr>
+                {% for total in totals %}
+                <tr>
+                    <td>{{ total['product'] }}</td>
+                    <td>{{ total['total'] }}</td>
+                    <td>{{ total['unit'] if total['unit'] else '' }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>
