@@ -46,12 +46,6 @@ Ctrl+C ile sunucuyu durdurabilirsiniz.
 
 > Not: Veritabanı dosyası (`orders.db`) aynı dizinde otomatik oluşturulur. Eğer veritabanını sıfırlamak isterseniz `/reset` formunu kullanabilirsiniz.
 
-## Bu sürümde yapılan düzeltmeler
-- `app.py` içindeki `/add` route'unda SQL parametre sıralaması hatası düzeltildi. (Yanlış parametre gönderimi sebebiyle UPDATE/SELECT hataları oluşuyordu.)
-- `bulk_add` fonksiyonunda parsing ve değişken kullanım hataları giderildi. Artık "Ürün 5 kg" veya "Ürün 5" gibi satırlar doğru ayrıştırılıyor.
-- `templates/index.html` içinde `<!DOCTYPE html>` yazım hatası düzeltildi ve toplu ekleme formunun `action` yolu Flask route'u ile eşleşecek şekilde `/bulk_add` olarak değiştirildi.
-- Ürün isimleri için Türkçe karakterleri normalize eden `fix_product_name` fonksiyonu iyileştirildi.
-
 ## Karşılaşabileceğiniz Hatalar / Çözümleri
 - `Import "flask" could not be resolved` veya `ModuleNotFoundError: No module named 'flask'`
   - Sanal ortamın aktif olduğundan ve `flask` paketini yüklediğinizden emin olun. Yukarıdaki pip yükleme adımlarını tekrar çalıştırın.
@@ -62,11 +56,4 @@ Ctrl+C ile sunucuyu durdurabilirsiniz.
 - Port çakışması (5000 kullanılıyor)
   - Farklı bir portta çalıştırmak için `app.run(debug=True, port=5001)` gibi `app.py` içinde port numarasını değiştirebilirsiniz.
 
-## Geliştirme & Sonraki Adımlar (öneriler)
-- Ürün listesi ve otomatik tamamlama için JavaScript ile daha zengin bir arayüz eklenebilir.
-- Birim dönüşümleri veya aynı ürünün farklı birimlerde toplanması (ör. kg ile adet) için mantık eklenebilir.
-- Basit bir REST API ayrı bir rota seti olarak yazılabilir (JSON giriş/çıkış).
-
 ---
-
-Hazır durumda: uygulama dosya düzeltmeleri yapıldı ve Flask kurulumu tamamlandı. Sunucuyu çalıştırdıktan sonra ana sayfaya giderek görünümü kontrol edin. Eğer isterseniz ben sunucuyu doğrulamayı tamamlayıp kısa bir test raporu da bırakabilirim.
